@@ -1,0 +1,11 @@
+RewriteEngine On
+
+RewriteRule ^index.php/(.*)$ /$1 [R=301,L]
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond $1 !^(index\.php|images|robots\.txt)
+RewriteRule ^(.*)$ index.php?/$1 [L]
+
+RewriteCond %{HTTP_HOST} ^109\.74\.8\.143
+RewriteRule (.*) https://reeo.se/$1 [R=301,L]
