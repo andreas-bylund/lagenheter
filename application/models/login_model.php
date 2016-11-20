@@ -7,6 +7,20 @@ class Login_model extends CI_Model {
     parent::__construct();
   }
 
+  public function check_if_token_exists($token)
+  {
+    $this->db->select('mail');
+    $this->db->where('token', $token);
+    $this->db->where('used', 0);
+
+    $query = $this->db->get('reset_password');
+
+    if($query->num_rows() > 0)
+    {
+      return $query->row()->mail;
+    }
+  }
+
   public function already_activ_reset_password($mail)
   {
     $this->db->where('mail', $mail);
@@ -16,11 +30,11 @@ class Login_model extends CI_Model {
 
     if($query->num_rows() > 0)
     {
-      return TRUE;
+      return FALSE;
     }
     else
     {
-      return FALSE;
+      return TRUE;
     }
   }
 

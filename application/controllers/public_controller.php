@@ -3,6 +3,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Public_controller extends CI_Controller {
 
+
+  public function test()
+  {
+    $test1 = true;
+    $test2 = true;
+
+    if($test1 && $test2)
+    {
+      echo "Båda TRUE";
+    }
+    else
+    {
+      echo "Något gick fel";
+    }
+  }
+
 	public function index()
 	{
 		$this->template->load('templates\public', 'start');
@@ -73,6 +89,67 @@ class Public_controller extends CI_Controller {
   public function activation_mail()
   {
     $this->template->load('templates\public', 'activate_mail');
+  }
+
+  public function change_password_send($token)
+  {
+    $mail = $this->check_token($token);
+
+    if($mail)
+    {
+      $data['token'] = $token;
+      $data['mail'] = $mail;
+
+      $this->load->library('form_validation');
+
+      $this->form_validation->set_rules('password', 'Password', 'trim|required');
+
+      $this->form_validation->set_rules('password_two', 'Password',
+      'trim|required|matches[password]');
+
+      if($this->form_validation->run() == FALSE)
+      {
+        $this->template->load('templates\public', 'change_password', $data);
+      }
+      else
+      {
+        echo "Lösenordet ändrat";
+      }
+    }
+  }
+
+  public function check_token($token)
+  {
+    #Check if token exists
+    $this->load->model('login_model');
+
+    $mail = $this->login_model->check_if_token_exists($token);
+
+    if($mail)
+    {
+      return $mail;
+    }
+    else
+    {
+      return FALSE;
+    }
+  }
+
+  public function change_password($token)
+  {
+    $mail = $this->check_token($token);
+
+    if($mail)
+    {
+      $data['token'] = $token;
+      $data['mail'] = $mail;
+    }
+    else
+    {
+      echo "Den fanns inte alls";
+    }
+
+    $this->template->load('templates\public', 'change_password', $data);
   }
 
   public function activate_user($token)
@@ -176,7 +253,8 @@ class Public_controller extends CI_Controller {
     }
     else
     {
-      $this->session->set_flashdata('error', 'Den mailadressen finns inte i vårt system');
+      $this->session->set_flashdata('error', 'Den mailadressen finns inte i vårt
+      system eller så....');
 
       redirect('reset_password');
     }
