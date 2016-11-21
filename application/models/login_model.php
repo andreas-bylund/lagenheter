@@ -21,7 +21,7 @@ class Login_model extends CI_Model {
     }
   }
 
-  public function already_activ_reset_password($mail)
+  public function already_active_reset_password($mail)
   {
     $this->db->where('mail', $mail);
     $this->db->where('used', 0);
@@ -54,7 +54,6 @@ class Login_model extends CI_Model {
 
   public function reset_password_validate_mail($string)
   {
-    $this->db->select('*');
     $this->db->where('activated', 1);
     $this->db->where('mail', $string);
 

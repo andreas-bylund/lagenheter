@@ -6,6 +6,7 @@
 <?php
 
 echo $this->session->flashdata('error');
+echo $this->session->flashdata('message');
 
 echo validation_errors();
 

@@ -19,24 +19,35 @@ class Public_controller extends CI_Controller {
     }
   }
 
+  /**
+   * Startsidan - view
+   */
 	public function index()
 	{
 		$this->template->load('templates\public', 'start');
 	}
 
+  /**
+   * Bli medlem - view
+   */
   public function register()
   {
     $this->load->helper('form');
 
-    $this->template->load('templates\public', 'register');
+    $this->template->load('templates\login', 'register');
   }
 
+  /**
+   * Bli medlem - hantera datan
+   */
   public function register_send()
   {
     $this->load->library('form_validation');
 
+    //Skapa en aktiveringstoken som används för att aktivera kontot
     $activation_token = $this->random_token_generator(12);
 
+    //Formulär regl - Mailadressen
     $this->form_validation->set_rules('mail', 'Mail',
     'trim|required|valid_email|is_unique[users.mail]',
       array(
@@ -45,7 +56,13 @@ class Public_controller extends CI_Controller {
       )
     );
 
+    //Formulär regel - Namn
+    $this->form_validation->set_rules('name', 'Namn', 'trim|required');
+
+    //Formulär regel - Lösenord
     $this->form_validation->set_rules('password', 'Password', 'trim|required');
+
+    //Formulär regel - Mobilnummer
     $this->form_validation->set_rules('number', 'Mobilnummer',
      'trim|required|numeric',
        array(
@@ -60,6 +77,7 @@ class Public_controller extends CI_Controller {
     }
     else
     {
+      #Datan gick igenom reglerna. Lägger till medlem i databasen
       $this->load->model('register_model');
 
       $data['name'] = $this->input->post('name');
@@ -68,12 +86,13 @@ class Public_controller extends CI_Controller {
       $data['activation_token'] = $activation_token;
       $data['password']   = $this->hash_password($this->input->post('password'));
 
+      //Om vi lyckas lägga till användaren i databasen
       if($this->register_model->add_member($data))
       {
         #Send Activation mail
         $mail_data['to'] = $this->input->post('mail');
         $mail_data['subject'] = 'Aktiva ditt konto';
-        $mail_data['message'] = $activation_token;
+        $mail_data['message'] = $activation_token; //<--- Fixa till
 
         $this->send_mail($mail_data);
 
@@ -81,18 +100,33 @@ class Public_controller extends CI_Controller {
       }
       else
       {
-        echo "Något gick fel";
+        echo "Något gick fel"; //<--- Fixa till.
+
+        //Logga felet
+        //Fixa en errorsida
       }
     }
   }
 
+  /**
+   * "Dags att aktivera ditt konto" - View
+   * Dennsa sida kommer fram när användaren har blivit
+   * medlem och måste aktivera sitt konto för att använda
+   * denna tjänst.
+   */
   public function activation_mail()
   {
     $this->template->load('templates\public', 'activate_mail');
   }
 
+  /**
+   * Ändra lösenord handtering
+   */
   public function change_password_send($token)
   {
+    /* Kontrollerar om den token som finns i databasen
+    Om token finns i databasen skickar den tillbaka mailadressen som
+    token är kopplad till */
     $mail = $this->check_token($token);
 
     if($mail)
@@ -113,14 +147,16 @@ class Public_controller extends CI_Controller {
       }
       else
       {
-        echo "Lösenordet ändrat";
+        echo "Lösenordet ändrat"; //<--- Fixa till en bättre view
       }
     }
   }
 
+  /**
+   * Kontrollerar om token för [LÖSENORD RESET] finns
+   */
   public function check_token($token)
   {
-    #Check if token exists
     $this->load->model('login_model');
 
     $mail = $this->login_model->check_if_token_exists($token);
@@ -135,8 +171,13 @@ class Public_controller extends CI_Controller {
     }
   }
 
+  /**
+   * Ändra lösenord - view
+   */
   public function change_password($token)
   {
+    /* Kontrollerar om token finns. Finns den skickar den tillbaka Mailadressen
+    Som token är kopplad till. */
     $mail = $this->check_token($token);
 
     if($mail)
@@ -146,43 +187,49 @@ class Public_controller extends CI_Controller {
     }
     else
     {
-      echo "Den fanns inte alls";
+      echo "Den fanns inte alls"; //<-- Fixa till
     }
 
     $this->template->load('templates\public', 'change_password', $data);
   }
 
+  /**
+   * Aktivera användaren
+   */
   public function activate_user($token)
   {
-    #Check if token exists
     $this->load->model('register_model');
 
+    //Kontrollera om token för aktivera användaren finns
+    //Finns token så kommer användaren bli aktiverad.
     $result = $this->register_model->check_if_token_exists($token);
 
     if($result)
     {
-      #The token did exists, the user have been activated
-      echo "Token did exists";
+      //Fixa till ett flashmeddelade som talar om att användaren har blivit
+      //aktiverad.
+
+      //$this->session->set_flashdata('message', 'Meddelande');
+      redirect('login');
+
     }
     else
     {
-      #The token didn't exist
-      $this->session->set_flashdata('error', 'Error meddelande - Nyckeln accepteras inte');
+      //Token fanns inte
+      $this->session->set_flashdata('error', 'Nyckeln fanns inte');
 
       redirect('activate');
     }
   }
 
+  /**
+   * Skicka mail via SENDGRID
+   * $mail_data['to'] = ;
+   * $mail_data['subject'] '';
+   * $mail_data['message'] '';
+   */
   private function send_mail($mail_data)
   {
-    #Mall att använda vid behov
-
-    /*
-    $mail_data['to'] = ;
-    $mail_data['subject'] '';
-    $mail_data['message'] '';
-    */
-
     $this->load->library('email');
 
     $this->email->initialize(array(
@@ -205,69 +252,92 @@ class Public_controller extends CI_Controller {
 
   }
 
+  /**
+   * Hasha lösenordet funktion
+   */
   private function hash_password($string)
   {
     return password_hash($string, PASSWORD_DEFAULT);
   }
 
+  /**
+   * Återställa lösenordet - view
+   */
   public function forgot_password()
   {
-    #Få ange ett nytt lösenord
-
-    #Sedan får användaren logga in med det nya lösenordet
-
     $this->load->helper('form');
 
     $this->template->load('templates\public', 'reset_password');
   }
 
+  /**
+   * Hantera byte av lösenord - function
+   * (1) Kontrollerar om det verkligen är ett lösenord som anges
+   * (2) Kontrollerar om mailen finns reggad och om det redan pågår en reset
+   */
   public function forgot_password_send()
   {
     $mail = $this->input->post('mail');
     $token = $this->random_token_generator(20);
 
-    $this->load->model('login_model');
+    //Kontrollera om det verkligen är en mailadress
+    $this->load->library('form_validation');
 
-    $result = $this->login_model->reset_password_validate_mail($mail);
-    $result_already = $this->login_model->already_activ_reset_password($mail);
+    $this->form_validation->set_rules('mail', 'Mailadress', 'trim|required|valid_email');
 
-    if($result && $result_already)
+    if($this->form_validation->run() == FALSE)
     {
-      #Lägger till informationen i databasen
-      $reset_data['mail'] = $this->input->post('mail');
-      $reset_data['token'] = $token;
-      $reset_data['created_at'] = date("Y:m:d h:i:s");
-
-      $this->login_model->add_reset_password($reset_data);
-
-      #Skicka mail till användaren
-      $mail_data['to'] = $this->input->post('mail');
-      $mail_data['subject'] = 'Återställ ditt lösenord';
-      $mail_data['message'] = $token;
-
-      $this->send_mail($mail_data);
-
-      $this->session->set_flashdata('succes', 'Kolla in din mail....');
-
-      redirect('reset_password');
+      $this->template->load('templates\public', 'reset_password');
     }
     else
     {
-      $this->session->set_flashdata('error', 'Den mailadressen finns inte i vårt
-      system eller så....');
+      $this->load->model('login_model');
 
-      redirect('reset_password');
+      $result = $this->login_model->reset_password_validate_mail($mail);
+      $result_already = $this->login_model->already_active_reset_password($mail);
+
+      if($result && $result_already)
+      {
+        #Lägger till informationen i databasen
+        $reset_data['mail'] = $this->input->post('mail');
+        $reset_data['token'] = $token;
+        $reset_data['created_at'] = date("Y:m:d h:i:s");
+        $this->login_model->add_reset_password($reset_data);
+
+        #Skicka mail till användaren
+        $mail_data['to'] = $this->input->post('mail');
+        $mail_data['subject'] = 'Återställ ditt lösenord';
+        $mail_data['message'] = $token;
+
+        $this->send_mail($mail_data);
+
+        $this->session->set_flashdata('succes', 'Kolla in din mail....');
+
+        redirect('reset_password');
+      }
+      else
+      {
+        $this->session->set_flashdata('error', 'Den mailadressen finns inte i vårt
+        system eller så....');
+
+        redirect('reset_password');
+      }
     }
-
   }
 
+  /**
+   * Logga in - view
+   */
   public function login()
   {
     $this->load->helper('form');
 
-    $this->template->load('templates\public', 'login');
+    $this->template->load('templates\login', 'login');
   }
 
+  /**
+   * Häntera login data
+   */
   public function login_send()
   {
     $this->load->library('form_validation');
@@ -289,12 +359,17 @@ class Public_controller extends CI_Controller {
     else
     {
       #No errors, check if username and passwords validates
-      $data['mail']     = $this->input->post('mail');
+      $data['mail'] = $this->input->post('mail');
       $data['password'] = $this->input->post('password');
 
       if($this->validate_login($data))
       {
-        echo 'Skicka vidare till "/user"';
+
+        $this->session->set_userdata('logged_in', TRUE);
+        $this->session->set_userdata('mail', $data['mail']);
+
+        redirect('dashboard');
+
       }
       else
       {
@@ -305,6 +380,9 @@ class Public_controller extends CI_Controller {
     }
   }
 
+  /**
+   * Validerar mail och lösenordet
+   */
   private function validate_login($data)
   {
     $this->load->model('login_model');
@@ -319,6 +397,10 @@ class Public_controller extends CI_Controller {
     }
   }
 
+  /**
+   * Skapar en random token
+   * Param: $length = längd på token
+   */
   private function random_token_generator($length)
   {
     return bin2hex(openssl_random_pseudo_bytes($length));
