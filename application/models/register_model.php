@@ -7,6 +7,18 @@ class Register_model extends CI_Model {
     parent::__construct();
   }
 
+  public function get_mail_by_token($token)
+  {
+    $this->db->select('mail');
+    $this->db->where('activation_token', $token);
+
+    $query = $this->db->get('users');
+
+    $row = $query->row();
+
+    return $row->mail;
+  }
+
   private function activate_user($token)
   {
     $this->db->set('activated', 1);

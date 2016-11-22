@@ -9,16 +9,16 @@
     <div class="panel-body">
       <?php echo $this->session->flashdata('error'); ?>
       <?php echo validation_errors(); ?>
-      <form class="form-horizontal m-t-20" action="<?php echo base_url('login/send'); ?>">
+      <form class="form-horizontal m-t-20" method="post" action="<?php echo base_url('login/send'); ?>">
         <div class="form-group ">
           <div class="col-xs-12">
-            <input class="form-control" type="text" required="" placeholder="Din e-postadress">
+            <input class="form-control" type="text" name="mail" id="mail" placeholder="E-postadress">
           </div>
         </div>
 
           <div class="form-group">
             <div class="col-xs-12">
-              <input class="form-control" type="password" required="" placeholder="Ditt lösenord">
+              <input class="form-control" name="password" id="password" type="password" placeholder="Ditt lösenord">
             </div>
           </div>
 

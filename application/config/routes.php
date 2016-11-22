@@ -26,6 +26,9 @@ $route['test'] = 'Public_controller/test'; //<--- Test route
 $route['dashboard'] = 'Member_controller/index';
 $route['dashboard/sign_out'] = 'Member_controller/sign_out';
 
+$route['dashboard/settings'] = 'Member_controller/change_settings';
+$route['dashboard/settings/send'] = 'Member_controller/change_settings_send';
+
 $route['dashboard/stad/stockholm'] = 'Member_controller/stockholm_overview';
 
 /**

@@ -3,12 +3,9 @@
     <div class="card-box product-detail-box">
       <div class="row">
         <div class="col-sm-4">
-          <div class="sp-loading" style="display: none;">
-            <img src="<?php echo base_url('assets/images/sp-loading.gif'); ?>" alt=""><br>LOADING IMAGES
-          </div>
           <div class="sp-wrap sp-non-touch" style="display: inline-block;">
             <div class="sp-large">
-              <a href="<?php echo base_url('assets/images/products/big/1.jpg'); ?>" class=".sp-current-big"><img src="assets/images/products/big/1.jpg" alt=""></a>
+              <img src="<?php echo base_url('images/stader/stockholm.jpg'); ?>" alt="Stockholm">
             </div>
           </div>
         </div>
@@ -17,7 +14,10 @@
           <div class="product-right-info">
             <h1><b>Stockholm</b></h1>
 
-            <h2> <b>249 kr</b><small class="text-muted m-l-10">Därefter 139 kr/mån </small></h2>
+            <h2>
+              Just nu endast: <b>249 kr/mån</b><br />
+              <small> <strike>Ordinarie pris: 299 kr/mån</strike></small>
+            </h2>
 
             <hr>
 

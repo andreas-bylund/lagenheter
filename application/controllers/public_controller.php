@@ -73,7 +73,7 @@ class Public_controller extends CI_Controller {
 
     if($this->form_validation->run() == FALSE)
     {
-      $this->template->load('templates\public', 'register');
+      $this->template->load('templates\login', 'register');
     }
     else
     {
@@ -116,7 +116,7 @@ class Public_controller extends CI_Controller {
    */
   public function activation_mail()
   {
-    $this->template->load('templates\public', 'activate_mail');
+    $this->template->load('templates\login', 'activate_mail');
   }
 
   /**
@@ -206,8 +206,20 @@ class Public_controller extends CI_Controller {
 
     if($result)
     {
-      //Fixa till ett flashmeddelade som talar om att användaren har blivit
-      //aktiverad.
+      //Fixa till ett flashmeddelade som talar om att användaren har blivit aktiverad.
+
+      $this->load->model('register_model');
+
+      $mail = $this->register_model->get_mail_by_token($token);
+
+      //SKapa användare hos Stripe
+      require_once(APPPATH.'libraries/stripe-php-4.1.1/stripe.php');
+
+      \Stripe\Stripe::setApiKey("sk_test_FNSsLoAU1Q3HHjNfytNbxToK");
+
+      $test = \Stripe\Customer::create(array(
+        "email" => $mail
+      ));
 
       //$this->session->set_flashdata('message', 'Meddelande');
       redirect('login');
@@ -221,6 +233,7 @@ class Public_controller extends CI_Controller {
       redirect('activate');
     }
   }
+
 
   /**
    * Skicka mail via SENDGRID
@@ -267,7 +280,7 @@ class Public_controller extends CI_Controller {
   {
     $this->load->helper('form');
 
-    $this->template->load('templates\public', 'reset_password');
+    $this->template->load('templates\login', 'reset_password');
   }
 
   /**
