@@ -6,16 +6,19 @@ class Public_controller extends CI_Controller {
 
   public function test()
   {
-    $test1 = true;
-    $test2 = true;
+    $this->load->model('register_model');
 
-    if($test1 && $test2)
+    $mail = "andreas@andreasbylund.se";
+
+    $response = $this->register_model->user_already_stripe_customer($mail);
+
+    if($response)
     {
-      echo "Båda TRUE";
+      echo "";
     }
     else
     {
-      echo "Något gick fel";
+      echo "FALSE";
     }
   }
 
@@ -212,14 +215,20 @@ class Public_controller extends CI_Controller {
 
       $mail = $this->register_model->get_mail_by_token($token);
 
-      //SKapa användare hos Stripe
+      /*
+      //Skapa användare hos Stripe
       require_once(APPPATH.'libraries/stripe-php-4.1.1/stripe.php');
 
       \Stripe\Stripe::setApiKey("sk_test_FNSsLoAU1Q3HHjNfytNbxToK");
 
-      $test = \Stripe\Customer::create(array(
+      $response = \Stripe\Customer::create(array(
         "email" => $mail
       ));
+
+      //Stripe user id till användaren
+      $this->register_model->set_stripe_user_id($response->id, $token);
+
+      */
 
       //$this->session->set_flashdata('message', 'Meddelande');
       redirect('login');

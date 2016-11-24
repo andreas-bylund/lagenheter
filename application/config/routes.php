@@ -31,6 +31,9 @@ $route['dashboard/settings/send'] = 'Member_controller/change_settings_send';
 
 $route['dashboard/stad/stockholm'] = 'Member_controller/stockholm_overview';
 
+$route['dashboard/thankyou'] = 'Member_controller/thankyou';
+$route['dashboard/process_subscription/(:any)'] = 'Member_controller/process_subscription/$1';
+
 /**
  * Standard routes
  */

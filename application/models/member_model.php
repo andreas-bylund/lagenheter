@@ -9,7 +9,7 @@ class Member_model extends CI_Model {
 
   public function fetch_userdata($mail)
   {
-    $this->db->select('user_id, name, cellphone, mail');
+    $this->db->select('user_id, name, cellphone, mail, stripe_user_id');
     $this->db->where('mail', $mail);
 
     $query = $this->db->get('users');

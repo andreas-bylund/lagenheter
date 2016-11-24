@@ -33,9 +33,21 @@
             those that proceed from the head and those from the heart.</p>
 
             <div class="m-t-30">
-              <button type="button" class="btn btn-danger waves-effect waves-light btn-lg">
-              <span class="btn-label"><i class="fa fa-shopping-cart"></i>
-              </span>Påbörja Prenumerationen</button>
+
+              <form action="<?php echo base_url('dashboard/process_subscription/stockholm'); ?>" method="POST">
+                <script
+                  src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                  data-key="pk_test_2xdVqkvOlH7mc6zd80M4GpfY"
+                  data-image="http://localhost/lagenhet/images/stader/stockholm.jpg"
+                  data-name="Stockholm"
+                  data-description="Beskrivning på tjänsten."
+                  data-locale="sv"
+                  data-label="Prenumerera"
+                  data-allow-remember-me="false"
+                  data-label="Sign Me Up!"
+                  data-email="<?php echo $this->session->userdata('mail'); ?>">
+                </script>
+              </form>
             </div>
           </div>
         </div>
@@ -74,3 +86,15 @@
     </div>
   </div> <!-- end col -->
 </div>
+
+<script src="https://checkout.stripe.com/checkout.js"></script>
+<script>
+var handler = StripeCheckout.configure({
+
+});
+
+document.getElementById('stripe-demo').addEventListener('click', function(e) {
+  handler.open();
+  e.preventDefault();
+});
+</script>

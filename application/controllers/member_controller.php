@@ -14,6 +14,91 @@ class Member_controller extends CI_Controller {
     }
   }
 
+  public function process_subscription($item)
+  {
+    $this->load->model('register_model');
+    $mail = $_POST['stripeEmail'];
+
+    if($item == "stockholm")
+    {
+      $plan = "stockholm-erbjudande";
+    }
+    else
+    {
+      echo "Error";
+      exit();
+      //Fixa till bättre
+    }
+
+    require_once(APPPATH.'libraries/stripe-php-4.1.1/stripe.php');
+
+    \Stripe\Stripe::setApiKey("sk_test_FNSsLoAU1Q3HHjNfytNbxToK");
+
+    //Kontrollera om användaren redan finns som kund hos stripe
+    $stripe_user_id = $this->register_model->user_already_stripe_customer($mail);
+
+    if($stripe_user_id)
+    {
+      //Redan medlem hos stripe. Lägger på subscription på nuvarande användaren
+      try
+      {
+        $response = \Stripe\Subscription::create(array(
+          "customer" => $stripe_user_id,
+          'source'  => $_POST['stripeToken'],
+          "plan" => $plan
+        ));
+
+        echo '<pre>';
+        print_r($response);
+        exit();
+      }
+      catch(Exception $e)
+      {
+        error_log("unable to sign up customer:" . $_POST['stripeEmail'].
+          ", error:" . $e->getMessage());
+          echo $e->getMessage();
+          exit();
+      }
+
+      redirect('dashboard/thankyou');
+      exit;
+    }
+    else
+    {
+      //Användaren är inte reggad hos stripe sedan tidigare. Skapar ny användare.
+
+      try
+      {
+
+        $customer = \Stripe\Customer::create(array(
+          'email' => $_POST['stripeEmail'],
+          'source'  => $_POST['stripeToken'],
+          'plan' => $plan
+        ));
+
+        $this->register_model->set_stripe_user_id($customer->id, $mail);
+
+        redirect('dashboard/thankyou');
+        exit;
+      }
+      catch(Exception $e)
+      {
+        header('Location:oops.html');
+        error_log("unable to sign up customer:" . $_POST['stripeEmail'].
+          ", error:" . $e->getMessage());
+      }
+    }
+  }
+
+  /**
+   * "Thank you" page
+   * Visas när en medlem har startat en prenumeration
+   */
+  public function thankyou()
+  {
+    $this->template->load('templates\member', 'member/thankyou');
+  }
+
   /**
    * Startsidan - View
    */
@@ -33,6 +118,28 @@ class Member_controller extends CI_Controller {
     $mail = $this->session->userdata('mail');
 
     $data['userdata'] = $this->member_model->fetch_userdata($mail);
+
+    require_once(APPPATH.'libraries/stripe-php-4.1.1/stripe.php');
+
+    \Stripe\Stripe::setApiKey("sk_test_FNSsLoAU1Q3HHjNfytNbxToK");
+
+    $stripe_sub_response = \Stripe\Subscription::all(array(
+      'limit' => 100,
+      'customer' => $data['userdata']->stripe_user_id
+    ));
+
+    $data['subscriptions'] = $stripe_sub_response;
+
+    foreach ($stripe_sub_response->data as $subscription)
+    {
+      echo $subscription->id;
+      echo '<br>';
+      echo $subscription->current_period_end;
+    }
+    echo '<hr>';
+    echo '<pre>';
+    print_r($stripe_sub_response);
+    exit();
 
     $this->template->load('templates\member', 'member/settings', $data);
   }
