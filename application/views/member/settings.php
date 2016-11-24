@@ -4,7 +4,7 @@
   <div class="col-sm-12">
     <div class="card-box">
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-12">
           <h4 class="page-title" style="padding-bottom: 20px;">Kontoinställningar</h4>
           <?php
             if($this->session->flashdata('success'))
@@ -103,13 +103,6 @@
 							Uppdatera inställningarna
 						</button>
           </form>
-        </div>
-
-        <div class="col-md-6">
-          <h4 class="page-title" style="padding-bottom: 20px;">Avsluta prenumeration</h4>
-          <p class="text-center">
-            Du har ingen aktiv prenumeration just nu.
-          </p>
         </div>
       </div>
     </div>

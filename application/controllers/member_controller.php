@@ -47,10 +47,6 @@ class Member_controller extends CI_Controller {
           'source'  => $_POST['stripeToken'],
           "plan" => $plan
         ));
-
-        echo '<pre>';
-        print_r($response);
-        exit();
       }
       catch(Exception $e)
       {
@@ -90,6 +86,28 @@ class Member_controller extends CI_Controller {
     }
   }
 
+
+  public function list_subscriptions()
+  {
+    $this->load->model('member_model');
+
+    $mail = $this->session->userdata('mail');
+
+    $data['userdata'] = $this->member_model->fetch_userdata($mail);
+
+    require_once(APPPATH.'libraries/stripe-php-4.1.1/stripe.php');
+
+    \Stripe\Stripe::setApiKey("sk_test_FNSsLoAU1Q3HHjNfytNbxToK");
+
+    $stripe_sub_response = \Stripe\Subscription::all(array(
+      'limit' => 100,
+      'customer' => $data['userdata']->stripe_user_id,
+      'status'  => 'active'
+    ));
+
+    return $stripe_sub_response;
+  }
+
   /**
    * "Thank you" page
    * Visas när en medlem har startat en prenumeration
@@ -104,7 +122,29 @@ class Member_controller extends CI_Controller {
    */
   public function index()
   {
-    $this->template->load('templates\member', 'member/index');
+    //Hämta alla aktiva prenumerationer
+    $data['subscriptions'] = $this->list_subscriptions();
+
+    $this->template->load('templates\member', 'member/index', $data);
+  }
+
+  public function stop_subscription($id)
+  {
+
+    require_once(APPPATH.'libraries/stripe-php-4.1.1/stripe.php');
+
+    \Stripe\Stripe::setApiKey("sk_test_FNSsLoAU1Q3HHjNfytNbxToK");
+
+    $subscription = \Stripe\Subscription::retrieve($id);
+
+    $subscription->cancel(array('at_period_end' => true));
+
+    redirect('dashboard/cancel_confirmed');
+  }
+
+  public function cancel_confirmed()
+  {
+    echo "It's ended....";
   }
 
   /**
@@ -113,33 +153,12 @@ class Member_controller extends CI_Controller {
   public function change_settings()
   {
     $this->load->library('form_validation');
-
+    $this->load->library('table');
     $this->load->model('member_model');
+
     $mail = $this->session->userdata('mail');
 
     $data['userdata'] = $this->member_model->fetch_userdata($mail);
-
-    require_once(APPPATH.'libraries/stripe-php-4.1.1/stripe.php');
-
-    \Stripe\Stripe::setApiKey("sk_test_FNSsLoAU1Q3HHjNfytNbxToK");
-
-    $stripe_sub_response = \Stripe\Subscription::all(array(
-      'limit' => 100,
-      'customer' => $data['userdata']->stripe_user_id
-    ));
-
-    $data['subscriptions'] = $stripe_sub_response;
-
-    foreach ($stripe_sub_response->data as $subscription)
-    {
-      echo $subscription->id;
-      echo '<br>';
-      echo $subscription->current_period_end;
-    }
-    echo '<hr>';
-    echo '<pre>';
-    print_r($stripe_sub_response);
-    exit();
 
     $this->template->load('templates\member', 'member/settings', $data);
   }

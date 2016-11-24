@@ -11,7 +11,7 @@
         <title>Ubold - Responsive Admin Dashboard Template</title>
 
         <!--Morris Chart CSS -->
-		<link rel="stylesheet" href="<?php echo base_url('assets/plugins/morris/morris.css'); ?>">
+		    <link rel="stylesheet" href="<?php echo base_url('assets/plugins/morris/morris.css'); ?>">
         <!-- Custombox css -->
         <link href="<?php echo base_url('assets/plugins/custombox/css/custombox.css'); ?>" rel="stylesheet">
 
@@ -77,7 +77,7 @@
               <!-- Navigation Menu-->
               <ul class="navigation-menu">
                 <li class="has-submenu">
-                  <a href="<?php echo base_url('dashboard'); ?>"><i class="md md-dashboard"></i>Dashboard</a>
+                  <a href="<?php echo base_url('dashboard'); ?>"><i class="md md-dashboard"></i>Start</a>
                 </li>
               </ul>
               <!-- End navigation menu        -->

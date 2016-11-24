@@ -34,6 +34,9 @@ $route['dashboard/stad/stockholm'] = 'Member_controller/stockholm_overview';
 $route['dashboard/thankyou'] = 'Member_controller/thankyou';
 $route['dashboard/process_subscription/(:any)'] = 'Member_controller/process_subscription/$1';
 
+$route['dashboard/subscription/delete/(:any)'] = 'Member_controller/stop_subscription/$1';
+$route['dashboard/cancel_confirmed'] = 'Member_controller/cancel_confirmed';
+
 /**
  * Standard routes
  */

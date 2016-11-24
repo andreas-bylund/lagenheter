@@ -1,18 +1,77 @@
 <div class="row">
   <div class="col-sm-12">
-    <h4 class="page-title" style="padding-bottom: 20px;">Dina köp</h4>
-  </div>
-</div>
-
-<div class="row">
-  <div class="card-box">
-    <p class="text-center">Du har inga köp</p>
+    <h4 class="page-title" style="padding-bottom: 25px;">Dina prenumerationer</h4>
   </div>
 </div>
 
 <div class="row">
   <div class="col-sm-12">
-    <h4 class="page-title">Butik</h4>
+    <div class="card-box">
+      <div class="row">
+        <div class="col-md-12">
+
+          <?php
+          if($subscriptions->data)
+          {
+            echo '
+            <table class="table table-striped m-0">
+              <thead>
+                <tr>
+                  <th>Paket</th>
+                  <th>Perioden Startade</th>
+                  <th>Perioden slutar</th>
+                  <th>Pris</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>';
+
+              foreach ($subscriptions->data as $subscription)
+              {
+                if($subscription->status == "active")
+                {
+                  $status = "Aktiv";
+
+                  if($subscription->cancel_at_period_end === TRUE)
+                  {
+                    $status = "Uppsagd";
+                  }
+                }
+
+
+                echo '<tr>';
+                echo '<td>' . $subscription->plan->name . '</td>';
+                echo '<td>' . gmdate("Y-m-d H:i:s", $subscription->current_period_start) . '</td>';
+                echo '<td>' . gmdate("Y-m-d H:i:s", $subscription->current_period_end) . '</td>';
+                echo '<td>' . $subscription->plan->amount/100 . ' kr/mån</td>';
+                echo '<td>' . $status . '</td>';
+                echo '<td><a href="' . base_url('dashboard/subscription/edit/'.$subscription->id.'') . '"><span class="label label-warning">Hantera</span></a>  <a href="' . base_url('dashboard/subscription/delete/'.$subscription->id.'') . '"><span class="label label-danger">Avsluta</span></a></td>';
+                echo '</tr>';
+              }
+
+              echo '
+                </tbody>
+              </table>';
+            }
+            else
+            {
+              echo '
+              <p class="text-center">
+                Du har ingen aktiv prenumeration just nu.
+              </p>';
+            }
+
+           ?>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-12">
+    <h4 class="page-title">Lägenhetsbevakning</h4>
   </div>
 </div>
 
