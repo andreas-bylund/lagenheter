@@ -32,13 +32,14 @@
                 if($subscription->status == "active")
                 {
                   $status = "Aktiv";
+                  $button = '<a href="' . base_url('dashboard/subscription/delete/'.$subscription->id.'') . '"><span class="label label-danger">Avsluta</span></a>';
 
                   if($subscription->cancel_at_period_end === TRUE)
                   {
                     $status = "Uppsagd";
+                    $button = '<a href="' . base_url('dashboard/subscription/resume/'.$subscription->id.'/'.$subscription->plan->id.'') . '"><span class="label label-success">Ångra uppsägning </span></a>';
                   }
                 }
-
 
                 echo '<tr>';
                 echo '<td>' . $subscription->plan->name . '</td>';
@@ -46,7 +47,7 @@
                 echo '<td>' . gmdate("Y-m-d H:i:s", $subscription->current_period_end) . '</td>';
                 echo '<td>' . $subscription->plan->amount/100 . ' kr/mån</td>';
                 echo '<td>' . $status . '</td>';
-                echo '<td><a href="' . base_url('dashboard/subscription/edit/'.$subscription->id.'') . '"><span class="label label-warning">Hantera</span></a>  <a href="' . base_url('dashboard/subscription/delete/'.$subscription->id.'') . '"><span class="label label-danger">Avsluta</span></a></td>';
+                echo '<td><a href="' . base_url('dashboard/subscription/edit/'.$subscription->id.'') . '"><span class="label label-warning">Hantera</span></a>  '.$button.'</td>';
                 echo '</tr>';
               }
 

@@ -14,6 +14,19 @@ class Member_controller extends CI_Controller {
     }
   }
 
+  public function resume_subscription($id, $plan)
+  {
+    require_once(APPPATH.'libraries/stripe-php-4.1.1/stripe.php');
+
+    \Stripe\Stripe::setApiKey("sk_test_FNSsLoAU1Q3HHjNfytNbxToK");
+
+    $subscription = \Stripe\Subscription::retrieve($id);
+    $subscription->plan = $plan;
+    $subscription->save();
+
+    redirect('dashboard');
+  }
+
   public function process_subscription($item)
   {
     $this->load->model('register_model');
@@ -57,12 +70,10 @@ class Member_controller extends CI_Controller {
       }
 
       redirect('dashboard/thankyou');
-      exit;
     }
     else
     {
       //Användaren är inte reggad hos stripe sedan tidigare. Skapar ny användare.
-
       try
       {
 
@@ -75,7 +86,6 @@ class Member_controller extends CI_Controller {
         $this->register_model->set_stripe_user_id($customer->id, $mail);
 
         redirect('dashboard/thankyou');
-        exit;
       }
       catch(Exception $e)
       {
@@ -85,7 +95,6 @@ class Member_controller extends CI_Controller {
       }
     }
   }
-
 
   public function list_subscriptions()
   {
@@ -126,6 +135,11 @@ class Member_controller extends CI_Controller {
     $data['subscriptions'] = $this->list_subscriptions();
 
     $this->template->load('templates\member', 'member/index', $data);
+  }
+
+  public function edit_subscription($id)
+  {
+    $this->template->load('templates\member', 'member/edit_subscription');
   }
 
   public function stop_subscription($id)

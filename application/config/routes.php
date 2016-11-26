@@ -37,6 +37,10 @@ $route['dashboard/process_subscription/(:any)'] = 'Member_controller/process_sub
 $route['dashboard/subscription/delete/(:any)'] = 'Member_controller/stop_subscription/$1';
 $route['dashboard/cancel_confirmed'] = 'Member_controller/cancel_confirmed';
 
+$route['dashboard/subscription/resume/(:any)/(:any)'] = 'Member_controller/resume_subscription/$1/$2';
+
+$route['dashboard/subscription/edit/(:any)'] = 'Member_controller/edit_subscription/$1';
+
 /**
  * Standard routes
  */
