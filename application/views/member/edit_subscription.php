@@ -1,13 +1,56 @@
+
+
 <div class="row">
   <div class="col-md-6">
     <div class="card-box">
-      <h4 class="m-t-0 header-title"><b>Vad söker du efter?</b></h4>
-      <p class="text-muted m-b-30 font-13">
+      <h4 class="m-t-0 header-title"><b>Prenumeration - Vad söker du efter?</b></h4>
+      <p class="text-muted m-b-30 font-14">
         Här kan du specificera exakt vad du letar efter. Varje gång vi hittar en lägenhet som
         passar era preferenser kommer vi kontakta er på det sätt ni har bestämt.
       </p>
 
+      <h4><b>Just nu får du notiser när:</b></h4>
+      <p class="text-muted m-b-30 font-14">Vi hittar en lägenhet som : <br /></p>
+        <div style="padding-left: 10px;">
+
+          <?php
+            echo '- Kostar mellan ' . $current_settings->min_hyra . ' - ' . $current_settings->max_hyra . ' kronor';
+            echo '<br>';
+            echo '- Har mellan ' . $current_settings->min_rum . ' - ' . $current_settings->max_rum . ' rum';
+            echo '<br>';
+            echo '- Storlek mellan ' . $current_settings->min_kvm . ' - ' . $current_settings->max_kvm . ' kvm';
+            echo '<br>';
+
+            if($current_settings->enbart_snabben == "0")
+            {
+              echo '- som kräver <strong>bostadskö</strong> och de utan <strong>utan bostadskö</strong> <em>("Först till kvarn")</em>';
+            }
+            else if($current_settings->enbart_snabben == "1")
+            {
+              echo '- <strong>inte kräver bostadskö</strong>  <em>("Först till kvarn")</em>';
+            }
+          ?>
+
+        </div>
+
+
+      <hr>
+
       <form class="" action="index.html" method="post">
+        <h4><b>Lägenheter med krav på bostadskö?</b></h4>
+        <p class="text-muted m-b-30 font-14"></p>
+
+        <div class="radio radio-info radio-inline">
+          <input type="radio" id="enbart_snabben" value="0" name="enbart_snabben" checked>
+          <label for="enbart_snabben"> Ja, tack </label>
+        </div>
+
+        <div class="radio radio-inline">
+          <input type="radio" id="enbart_snabben2" value="1" name="enbart_snabben">
+          <label for="enbart_snabben2"> Nej, tack </label>
+        </div>
+        <br>
+
         <h4><b>Hyra</b></h4>
         <div class="row">
           <div class="col-md-4">

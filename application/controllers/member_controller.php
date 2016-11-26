@@ -27,9 +27,11 @@ class Member_controller extends CI_Controller {
     redirect('dashboard');
   }
 
+
   public function process_subscription($item)
   {
-    $this->load->model('register_model');
+    $this->load->model('member_model');
+
     $mail = $_POST['stripeEmail'];
 
     if($item == "stockholm")
@@ -48,7 +50,7 @@ class Member_controller extends CI_Controller {
     \Stripe\Stripe::setApiKey("sk_test_FNSsLoAU1Q3HHjNfytNbxToK");
 
     //Kontrollera om användaren redan finns som kund hos stripe
-    $stripe_user_id = $this->register_model->user_already_stripe_customer($mail);
+    $stripe_user_id = $this->member_model->user_already_stripe_customer($mail);
 
     if($stripe_user_id)
     {
@@ -60,6 +62,12 @@ class Member_controller extends CI_Controller {
           'source'  => $_POST['stripeToken'],
           "plan" => $plan
         ));
+
+        $data['stripe_user_id'] = $response->customer;
+        $data['stripe_sub_id'] = $response->id;
+        $data['active'] = 1;
+
+        $this->member_model->add_trigger($data);
       }
       catch(Exception $e)
       {
@@ -82,9 +90,15 @@ class Member_controller extends CI_Controller {
           'plan' => $plan
         ));
 
-        $this->register_model->set_stripe_user_id($customer->id, $mail);
+        $this->member_model->set_stripe_user_id($customer->id, $mail);
 
         $this->session->set_userdata('stripe_user_id', $customer->id);
+
+        $data['stripe_user_id'] = $customer->id;
+        $data['stripe_sub_id'] = $customer->subscription->id;
+        $data['active'] = 1;
+
+        $this->member_model->add_trigger($data);
 
         redirect('dashboard/thankyou');
       }
@@ -150,9 +164,16 @@ class Member_controller extends CI_Controller {
     $this->template->load('templates\member', 'member/index', $data);
   }
 
-  public function edit_subscription($id)
+  public function edit_subscription($stripe_sub_id)
   {
-    $this->template->load('templates\member', 'member/edit_subscription');
+    $this->load->model('member_model');
+
+    $data['current_settings'] = $this->member_model->current_trigger_settings(
+      $stripe_sub_id,
+      $this->session->userdata('stripe_user_id')
+    );
+
+    $this->template->load('templates\member', 'member/edit_subscription', $data);
   }
 
   public function stop_subscription($id)

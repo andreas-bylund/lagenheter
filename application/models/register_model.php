@@ -7,33 +7,9 @@ class Register_model extends CI_Model {
     parent::__construct();
   }
 
-  public function set_stripe_user_id($string, $mail)
-  {
-    $this->db->set('stripe_user_id', $string);
-    $this->db->where('mail', $mail);
 
-    $this->db->update('users');
-  }
 
-  public function user_already_stripe_customer($mail)
-  {
-    $this->db->select('stripe_user_id');
-    $this->db->where('mail', $mail);
 
-    $query = $this->db->get('users');
-
-    $data = $query->row();
-
-    if($data->stripe_user_id)
-    {
-
-      return $data->stripe_user_id;
-    }
-    else
-    {
-      return FALSE;
-    }
-  }
 
   public function get_mail_by_token($token)
   {

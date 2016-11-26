@@ -1,7 +1,7 @@
 <div class="row">
   <div class="col-md-6">
     <div class="card-box">
-      <h4 class="m-t-0 header-title"><b>Vad söker du efter?</b></h4>
+      <h4 class="m-t-0 header-title"><b>Inställningar</b></h4>
       <?php
         if($this->session->flashdata('success'))
         {
