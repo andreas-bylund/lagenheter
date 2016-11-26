@@ -76,7 +76,6 @@ class Member_controller extends CI_Controller {
       //Användaren är inte reggad hos stripe sedan tidigare. Skapar ny användare.
       try
       {
-
         $customer = \Stripe\Customer::create(array(
           'email' => $_POST['stripeEmail'],
           'source'  => $_POST['stripeToken'],
@@ -84,6 +83,8 @@ class Member_controller extends CI_Controller {
         ));
 
         $this->register_model->set_stripe_user_id($customer->id, $mail);
+
+        $this->session->set_userdata('stripe_user_id', $customer->id);
 
         redirect('dashboard/thankyou');
       }
@@ -104,17 +105,24 @@ class Member_controller extends CI_Controller {
 
     $data['userdata'] = $this->member_model->fetch_userdata($mail);
 
-    require_once(APPPATH.'libraries/stripe-php-4.1.1/stripe.php');
+    if(empty($data['userdata']->stripe_user_id))
+    {
+      return FALSE;
+    }
+    else
+    {
+      require_once(APPPATH.'libraries/stripe-php-4.1.1/stripe.php');
 
-    \Stripe\Stripe::setApiKey("sk_test_FNSsLoAU1Q3HHjNfytNbxToK");
+      \Stripe\Stripe::setApiKey("sk_test_FNSsLoAU1Q3HHjNfytNbxToK");
 
-    $stripe_sub_response = \Stripe\Subscription::all(array(
-      'limit' => 100,
-      'customer' => $data['userdata']->stripe_user_id,
-      'status'  => 'active'
-    ));
+      $stripe_sub_response = \Stripe\Subscription::all(array(
+        'limit' => 100,
+        'customer' => $data['userdata']->stripe_user_id,
+        'status'  => 'active'
+      ));
 
-    return $stripe_sub_response;
+      return $stripe_sub_response;
+    }
   }
 
   /**
@@ -133,6 +141,11 @@ class Member_controller extends CI_Controller {
   {
     //Hämta alla aktiva prenumerationer
     $data['subscriptions'] = $this->list_subscriptions();
+
+    if(!$data['subscriptions'])
+    {
+      $data['subscriptions'] = FALSE;
+    }
 
     $this->template->load('templates\member', 'member/index', $data);
   }
@@ -181,38 +194,46 @@ class Member_controller extends CI_Controller {
   {
     $this->load->library('form_validation');
 
+    $this->load->model('member_model');
+
     //Formulär regl - Mailadressen
-    $this->form_validation->set_rules('mail', 'Mail',
+    $this->form_validation->set_rules('mail', 'e-postadress',
     'trim|required|valid_email',
       array(
-        'required'      =>  'You have not provided %s.',
-        'valid_email'   =>  '%s is not a valid mail'
+        'required'      =>  'Du måste ange din %s.',
+        'valid_email'   =>  'Inte giltigt %s'
       )
     );
 
     //Formulär regel - Namn
-    $this->form_validation->set_rules('name', 'Namn', 'trim|required');
+    $this->form_validation->set_rules('name', 'namn', 'trim|required',
+      array(
+        'required'      =>  'Du måste ange ditt %s'
+      )
+    );
 
     //Formulär regel - Lösenord
     $this->form_validation->set_rules('password', 'Password', 'trim');
 
     //Formulär regel - Lösenord två
     $this->form_validation->set_rules('password_two', 'Password',
-    'trim|matches[password]');
+    'trim|matches[password]',
+      array(
+        'matches' =>  'Lösenorden matchar inte varandra.'
+      )
+    );
 
     //Formulär regel - Mobilnummer
-    $this->form_validation->set_rules('cellphone', 'Mobilnummer',
+    $this->form_validation->set_rules('cellphone', 'mobilnummer',
      'trim|required|numeric',
        array(
-         'required' =>  'You have not provided %s.',
-         'numeric'  =>  'Inte ett giltigt mobilnummer'
+         'required' =>  'Du måste ange ditt %s.',
+         'numeric'  =>  'Inte ett giltigt %s'
        )
      );
 
     if($this->form_validation->run() == FALSE)
     {
-
-      $this->load->model('member_model');
       $mail = $this->session->userdata('mail');
 
       $data['userdata'] = $this->member_model->fetch_userdata($mail);
@@ -221,16 +242,14 @@ class Member_controller extends CI_Controller {
     }
     else
     {
-
       #Datan gick igenom reglerna. Lägger till medlem i databasen
-      $this->load->model('member_model');
 
       $update_data['name'] = $this->input->post('name');
       $update_data['mail'] = $this->input->post('mail');
       $update_data['cellphone'] = $this->input->post('cellphone');
 
       //Lösenord
-      if($this->input->post('password') !== "[hemligtlosenord]")
+      if(!empty($this->input->post('password')))
       {
         $update_data['password'] = $this->hash_password($this->input->post('password'));
       }
@@ -240,15 +259,12 @@ class Member_controller extends CI_Controller {
       if($result)
       {
         $this->session->set_flashdata('success', 'Dina inställningar har blivit uppdaterade');
-
-        redirect('dashboard/settings');
       }
       else
       {
         $this->session->set_flashdata('error', 'Inget har uppdaterats.');
-
-        redirect('dashboard/settings');
       }
+      redirect('dashboard/settings');
     }
   }
 

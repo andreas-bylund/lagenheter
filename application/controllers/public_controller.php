@@ -386,12 +386,24 @@ class Public_controller extends CI_Controller {
 
       if($this->validate_login($data))
       {
-
         $this->session->set_userdata('logged_in', TRUE);
         $this->session->set_userdata('mail', $data['mail']);
 
-        redirect('dashboard');
+        //Sätter stripe_user_id om användaren redan är reggad som kund hos dem
+        $this->load->model('member_model');
 
+        $result = $this->member_model->fetch_userdata($data['mail']);
+
+        if(empty($result->stripe_user_id))
+        {
+          $this->session->set_userdata('stripe_user_id', FALSE);
+        }
+        else
+        {
+          $this->session->set_userdata('stripe_user_id', $result->stripe_user_id);
+        }
+
+        redirect('dashboard');
       }
       else
       {

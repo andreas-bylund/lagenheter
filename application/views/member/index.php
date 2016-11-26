@@ -11,7 +11,7 @@
         <div class="col-md-12">
 
           <?php
-          if($subscriptions->data)
+          if(!empty($subscriptions->data))
           {
             echo '
             <table class="table table-striped m-0">
