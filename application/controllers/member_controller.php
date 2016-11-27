@@ -15,6 +15,22 @@ class Member_controller extends CI_Controller {
   }
 
   /**
+   * Startsidan - View
+   */
+  public function index()
+  {
+    //Hämta alla aktiva prenumerationer från Stripe API
+    $data['subscriptions'] = $this->list_subscriptions();
+
+    if(!$data['subscriptions'])
+    {
+      $data['subscriptions'] = FALSE;
+    }
+
+    $this->template->load('templates\member', 'member/index', $data);
+  }
+
+  /**
    * Återta avslutad prenumeration
    * $id = Stripe user id
    * $plan = Subscription plan (Namnet på planen)
@@ -124,9 +140,9 @@ class Member_controller extends CI_Controller {
     }
   }
 
-
   /**
    * Listar alla prenumerationer - Stripe-API
+   * Hämtar data från Stripe-API och returnar den
    */
   public function list_subscriptions()
   {
@@ -159,32 +175,7 @@ class Member_controller extends CI_Controller {
   }
 
   /**
-   * "Thank you" sida
-   * Visas när en medlem har startat en prenumeration
-   */
-  public function thankyou()
-  {
-    $this->template->load('templates\member', 'member/thankyou');
-  }
-
-  /**
-   * Startsidan - View
-   */
-  public function index()
-  {
-    //Hämta alla aktiva prenumerationer från Stripe API
-    $data['subscriptions'] = $this->list_subscriptions();
-
-    if(!$data['subscriptions'])
-    {
-      $data['subscriptions'] = FALSE;
-    }
-
-    $this->template->load('templates\member', 'member/index', $data);
-  }
-
-  /**
-   * Ändra "Trigger-inställningar"
+   * Ändra "Trigger-inställningar" - View
    * $stripe_sub_id = Prenumeration-id (Stripe-API)
    */
   public function edit_subscription($stripe_sub_id)
@@ -224,6 +215,15 @@ class Member_controller extends CI_Controller {
   {
     echo "It's ended....";
     //<-- Fixa till
+  }
+
+  /**
+   * "Thank you" sida - View
+   * Visas när en medlem har startat en prenumeration
+   */
+  public function thankyou()
+  {
+    $this->template->load('templates\member', 'member/thankyou');
   }
 
   /**
