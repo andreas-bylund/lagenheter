@@ -14,6 +14,11 @@ class Member_controller extends CI_Controller {
     }
   }
 
+  /**
+   * Återta avslutad prenumeration
+   * $id = Stripe user id
+   * $plan = Subscription plan (Namnet på planen)
+   */
   public function resume_subscription($id, $plan)
   {
     require_once(APPPATH.'libraries/stripe-php-4.1.1/stripe.php');
@@ -27,7 +32,10 @@ class Member_controller extends CI_Controller {
     redirect('dashboard');
   }
 
-
+  /**
+   * Processera prenumerationen
+   * $item = namnet på subscription planen
+   */
   public function process_subscription($item)
   {
     $this->load->model('member_model');
@@ -59,7 +67,7 @@ class Member_controller extends CI_Controller {
       {
         $response = \Stripe\Subscription::create(array(
           "customer" => $stripe_user_id,
-          'source'  => $_POST['stripeToken'],
+          'source' => $_POST['stripeToken'],
           "plan" => $plan
         ));
 
@@ -67,6 +75,7 @@ class Member_controller extends CI_Controller {
         $data['stripe_sub_id'] = $response->id;
         $data['active'] = 1;
 
+        //Lägger till standard trigger för användaren
         $this->member_model->add_trigger($data);
       }
       catch(Exception $e)
@@ -86,20 +95,24 @@ class Member_controller extends CI_Controller {
       {
         $customer = \Stripe\Customer::create(array(
           'email' => $_POST['stripeEmail'],
-          'source'  => $_POST['stripeToken'],
+          'source' => $_POST['stripeToken'],
           'plan' => $plan
         ));
 
+        //Sätter "Stripe user id" på användarne
         $this->member_model->set_stripe_user_id($customer->id, $mail);
 
+        //Lägger till "stripe_user_id" i användaren sessoin
         $this->session->set_userdata('stripe_user_id', $customer->id);
 
         $data['stripe_user_id'] = $customer->id;
         $data['stripe_sub_id'] = $customer->subscription->id;
         $data['active'] = 1;
 
+        //Lägger till standard trigger för användaren
         $this->member_model->add_trigger($data);
 
+        //Skickar vidare kunden till "Tack!" sidan
         redirect('dashboard/thankyou');
       }
       catch(Exception $e)
@@ -111,14 +124,20 @@ class Member_controller extends CI_Controller {
     }
   }
 
+
+  /**
+   * Listar alla prenumerationer - Stripe-API
+   */
   public function list_subscriptions()
   {
     $this->load->model('member_model');
 
     $mail = $this->session->userdata('mail');
 
+    //Hämtar användardata
     $data['userdata'] = $this->member_model->fetch_userdata($mail);
 
+    //Användaren har inget "Stripe-user-id" satt i databasen
     if(empty($data['userdata']->stripe_user_id))
     {
       return FALSE;
@@ -130,7 +149,7 @@ class Member_controller extends CI_Controller {
       \Stripe\Stripe::setApiKey("sk_test_FNSsLoAU1Q3HHjNfytNbxToK");
 
       $stripe_sub_response = \Stripe\Subscription::all(array(
-        'limit' => 100,
+        'limit' => 100, //Max antal prenumerationer som hämtas
         'customer' => $data['userdata']->stripe_user_id,
         'status'  => 'active'
       ));
@@ -140,7 +159,7 @@ class Member_controller extends CI_Controller {
   }
 
   /**
-   * "Thank you" page
+   * "Thank you" sida
    * Visas när en medlem har startat en prenumeration
    */
   public function thankyou()
@@ -153,7 +172,7 @@ class Member_controller extends CI_Controller {
    */
   public function index()
   {
-    //Hämta alla aktiva prenumerationer
+    //Hämta alla aktiva prenumerationer från Stripe API
     $data['subscriptions'] = $this->list_subscriptions();
 
     if(!$data['subscriptions'])
@@ -164,10 +183,15 @@ class Member_controller extends CI_Controller {
     $this->template->load('templates\member', 'member/index', $data);
   }
 
+  /**
+   * Ändra "Trigger-inställningar"
+   * $stripe_sub_id = Prenumeration-id (Stripe-API)
+   */
   public function edit_subscription($stripe_sub_id)
   {
     $this->load->model('member_model');
 
+    //Användaren nuvarande inställningar
     $data['current_settings'] = $this->member_model->current_trigger_settings(
       $stripe_sub_id,
       $this->session->userdata('stripe_user_id')
@@ -176,23 +200,30 @@ class Member_controller extends CI_Controller {
     $this->template->load('templates\member', 'member/edit_subscription', $data);
   }
 
-  public function stop_subscription($id)
+  /**
+   * Avsluta prenumeration
+   * $stripe_sub_id = Prenumeration-id (Stripe-API)
+   */
+  public function stop_subscription($stripe_sub_id)
   {
-
     require_once(APPPATH.'libraries/stripe-php-4.1.1/stripe.php');
 
     \Stripe\Stripe::setApiKey("sk_test_FNSsLoAU1Q3HHjNfytNbxToK");
 
-    $subscription = \Stripe\Subscription::retrieve($id);
+    $subscription = \Stripe\Subscription::retrieve($stripe_sub_id);
 
     $subscription->cancel(array('at_period_end' => true));
 
     redirect('dashboard/cancel_confirmed');
   }
 
+  /**
+   * Cancel subscription - View
+   */
   public function cancel_confirmed()
   {
     echo "It's ended....";
+    //<-- Fixa till
   }
 
   /**
@@ -200,22 +231,26 @@ class Member_controller extends CI_Controller {
    */
   public function change_settings()
   {
-    $this->load->library('form_validation');
     $this->load->library('table');
+    $this->load->library('form_validation');
+
     $this->load->model('member_model');
 
     $mail = $this->session->userdata('mail');
 
+    //Hämtar användaren data
     $data['userdata'] = $this->member_model->fetch_userdata($mail);
 
     $this->template->load('templates\member', 'member/settings', $data);
   }
 
+  /**
+   * Ändra kontoinställningar - Process
+   */
   public function change_settings_send()
   {
-    $this->load->library('form_validation');
-
     $this->load->model('member_model');
+    $this->load->library('form_validation');
 
     //Formulär regl - Mailadressen
     $this->form_validation->set_rules('mail', 'e-postadress',
@@ -257,24 +292,28 @@ class Member_controller extends CI_Controller {
     {
       $mail = $this->session->userdata('mail');
 
+      //Hämtar användardata
       $data['userdata'] = $this->member_model->fetch_userdata($mail);
 
       $this->template->load('templates\member', 'member/settings', $data);
     }
     else
     {
-      #Datan gick igenom reglerna. Lägger till medlem i databasen
-
+      //Datan gick igenom reglerna. Lägger till medlem i databasen
       $update_data['name'] = $this->input->post('name');
       $update_data['mail'] = $this->input->post('mail');
       $update_data['cellphone'] = $this->input->post('cellphone');
 
-      //Lösenord
+      //Kontrollerar om användaren har angett något lösenord att uppdatera
       if(!empty($this->input->post('password')))
       {
         $update_data['password'] = $this->hash_password($this->input->post('password'));
       }
 
+      /**
+       * Uppdatera användarens inställningar
+       * return $return = true/false
+       */
       $result = $this->member_model->update_settings($update_data);
 
       if($result)
@@ -285,6 +324,7 @@ class Member_controller extends CI_Controller {
       {
         $this->session->set_flashdata('error', 'Inget har uppdaterats.');
       }
+
       redirect('dashboard/settings');
     }
   }
@@ -325,6 +365,7 @@ class Member_controller extends CI_Controller {
 
   /**
    * Hasha lösenordet funktion
+   * $string = lösenordet som ska hashas
    */
   private function hash_password($string)
   {
