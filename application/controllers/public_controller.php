@@ -4,24 +4,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Public_controller extends CI_Controller {
 
 
-  public function test()
-  {
-    $this->load->model('register_model');
-
-    $mail = "andreas@andreasbylund.se";
-
-    $response = $this->register_model->user_already_stripe_customer($mail);
-
-    if($response)
-    {
-      echo "";
-    }
-    else
-    {
-      echo "FALSE";
-    }
-  }
-
   /**
    * Startsidan - view
    */

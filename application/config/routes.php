@@ -17,11 +17,8 @@ $route['reset_password/send'] = 'Public_controller/forgot_password_send';
 $route['reset_password/(:any)'] = 'Public_controller/change_password/$1';
 $route['reset_password_send/(:any)'] = 'Public_controller/change_password_send/$1';
 
-$route['test'] = 'Public_controller/test'; //<--- Test route
 
-/**
- * Member routes
- */
+/*  Member routes */
 
 $route['dashboard'] = 'Member_controller/index';
 $route['dashboard/sign_out'] = 'Member_controller/sign_out';
@@ -29,17 +26,28 @@ $route['dashboard/sign_out'] = 'Member_controller/sign_out';
 $route['dashboard/settings'] = 'Member_controller/change_settings';
 $route['dashboard/settings/send'] = 'Member_controller/change_settings_send';
 
-$route['dashboard/stad/stockholm'] = 'Member_controller/stockholm_overview';
-
 $route['dashboard/thankyou'] = 'Member_controller/thankyou';
+
+$route['dashboard/subscription/edit/(:any)'] = 'Member_controller/edit_subscription/$1';
+
+/**
+ * Städer
+ */
+$route['dashboard/stad/stockholm'] = 'Member_controller/stockholm_overview';
 $route['dashboard/process_subscription/(:any)'] = 'Member_controller/process_subscription/$1';
 
+/**
+ * Stoppa prenumeration
+ */
 $route['dashboard/subscription/delete/(:any)'] = 'Member_controller/stop_subscription/$1';
 $route['dashboard/cancel_confirmed'] = 'Member_controller/cancel_confirmed';
 
+/**
+ * Återta prenumeration
+ */
 $route['dashboard/subscription/resume/(:any)/(:any)'] = 'Member_controller/resume_subscription/$1/$2';
 
-$route['dashboard/subscription/edit/(:any)'] = 'Member_controller/edit_subscription/$1';
+
 
 /**
  * Standard routes
