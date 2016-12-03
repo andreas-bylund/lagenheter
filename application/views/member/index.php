@@ -1,130 +1,33 @@
-<div class="row">
-  <div class="col-sm-12">
-    <h4 class="page-title" style="padding-bottom: 25px;">Dina prenumerationer</h4>
-  </div>
-</div>
+
 
 <div class="row">
-  <div class="col-sm-12">
+  <div class="col-sm-6">
     <div class="card-box">
       <div class="row">
         <div class="col-md-12">
-
-          <?php
-          if(!empty($subscriptions->data))
-          {
-            echo '
-            <table class="table table-striped m-0">
-              <thead>
-                <tr>
-                  <th>Paket</th>
-                  <th>Perioden Startade</th>
-                  <th>Perioden slutar</th>
-                  <th>Pris</th>
-                  <th>Status</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>';
-
-              foreach ($subscriptions->data as $subscription)
-              {
-                if($subscription->status == "active")
-                {
-                  $status = "Aktiv";
-                  $button = '<a href="' . base_url('dashboard/subscription/delete/'.$subscription->id.'') . '"><span class="label label-danger">Avsluta</span></a>';
-
-                  if($subscription->cancel_at_period_end === TRUE)
-                  {
-                    $status = "Uppsagd";
-                    $button = '<a href="' . base_url('dashboard/subscription/resume/'.$subscription->id.'/'.$subscription->plan->id.'') . '"><span class="label label-success">Ångra uppsägning </span></a>';
-                  }
-                }
-
-                echo '<tr>';
-                echo '<td>' . $subscription->plan->name . '</td>';
-                echo '<td>' . gmdate("Y-m-d H:i:s", $subscription->current_period_start) . '</td>';
-                echo '<td>' . gmdate("Y-m-d H:i:s", $subscription->current_period_end) . '</td>';
-                echo '<td>' . $subscription->plan->amount/100 . ' kr/mån</td>';
-                echo '<td>' . $status . '</td>';
-                echo '<td><a href="' . base_url('dashboard/subscription/edit/'.$subscription->id.'') . '"><span class="label label-warning">Hantera</span></a>  '.$button.'</td>';
-                echo '</tr>';
-              }
-
-              echo '
-                </tbody>
-              </table>';
-            }
-            else
-            {
-              echo '
-              <p class="text-center">
-                Du har ingen aktiv prenumeration just nu.
-              </p>';
-            }
-
-           ?>
+          <h4 class="m-t-0 header-title"><b>Nyheter</b></h4>
+          <p>
+            <strong>Vi Kontrollerar ännu fler hyresvärdar i Stockholmsområdet</strong> <br/>
+            Sedan midnatt Kontrollerar vi ännu flera hyresvärdar i Stockholmområdet.
+            En av dessa hyresvärdarna erbjuder så kallade "Först till kvarn" lägenheter. De övriga hyresvärdarna
+            erbjuder endast hyreslägenheter till dem i deras respektive bostadskö.<br />
+            Publicerad: <em> 2016-11-29</em><br> Författare: <em>Andreas Bylund</em> <hr>
+          </p>
         </div>
       </div>
     </div>
   </div>
-</div>
-
-<div class="row">
-  <div class="col-sm-12">
-    <h4 class="page-title">Lägenhetsbevakning</h4>
+  <div class="col-sm-6">
+    <div class="card-box">
+      <h4 class="m-t-0 header-title"><b>Driftinformation</b></h4>
+      <p class="text-center">Ingen störning rapporterad de senaste 7 dagarna.</p>
+    </div>
   </div>
-</div>
 
-<div class="row">
-  <div class="m-b-15">
-
-    <div class="col-sm-6 col-lg-3 col-md-4 desktops">
-      <div class="product-list-box thumb">
-        <a href="<?php echo base_url('dashboard/stad/stockholm'); ?>" class="image-popup" title="Screenshot-1">
-          <img src="<?php echo base_url('images/stader/stockholm.jpg'); ?>" class="thumb-img" alt="Stockholm">
-        </a>
-
-        <div class="detail">
-          <h4 class="m-t-0"><a href="" class="text-dark">Stockholm</a></h4>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-sm-6 col-lg-3 col-md-4 desktops">
-      <div class="product-list-box thumb">
-        <a href="javascript:void(0);" class="image-popup" title="Screenshot-1">
-          <img src="<?php echo base_url('images/stader/goteborg.jpg'); ?>" class="thumb-img" alt="work-thumbnail">
-        </a>
-
-        <div class="detail">
-          <h4 class="m-t-0"><a href="" class="text-dark">Göteborg</a></h4>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-sm-6 col-lg-3 col-md-4 desktops">
-      <div class="product-list-box thumb">
-        <a href="javascript:void(0);" class="image-popup" title="Screenshot-1">
-          <img src="<?php echo base_url('images/stader/malmo.jpg'); ?>" class="thumb-img" alt="work-thumbnail">
-        </a>
-
-        <div class="detail">
-          <h4 class="m-t-0"><a href="" class="text-dark">Malmö</a></h4>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-sm-6 col-lg-3 col-md-4 desktops">
-      <div class="product-list-box thumb">
-        <a href="javascript:void(0);" class="image-popup" title="Screenshot-1">
-          <img src="<?php echo base_url('images/stader/sundsvall.jpg'); ?>" class="thumb-img" alt="work-thumbnail">
-        </a>
-
-        <div class="detail">
-          <h4 class="m-t-0"><a href="" class="text-dark">Sundsvall</a></h4>
-        </div>
-      </div>
+  <div class="col-sm-6">
+    <div class="card-box">
+      <h4 class="m-t-0 header-title"><b>Kundtjänst - Svarstid </b></h4>
+      <p class="text-center">Just nu har vi en svarstid på: <strong>inom 12 timmar</strong></p>
     </div>
   </div>
 </div>

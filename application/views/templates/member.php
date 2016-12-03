@@ -36,15 +36,13 @@
 
 
     <body>
-
-
     <!-- Navigation Bar-->
       <header id="topnav">
         <div class="topbar-main">
           <div class="container">
             <!-- Logo container-->
             <div class="logo">
-                <a href="<?php echo base_url('dashboard'); ?>" class="logo"><span>Lägenhetsbevakning.se</a>
+                <a href="<?php echo base_url('dashboard'); ?>" class="logo">Lägenhetsbevakning.se</a>
             </div>
             <!-- End Logo container-->
 
@@ -52,7 +50,6 @@
             <div class="menu-extras">
 
               <ul class="nav navbar-nav navbar-right pull-right">
-                <li><a href="<?php echo base_url('dashboard/settings'); ?>"><i class="ti-settings text-custom m-r-10"></i> Kontoinställningar</a></li>
                 <li class="divider"></li>
                 <li><a href="<?php echo base_url('dashboard/sign_out'); ?>"><i class="ti-power-off text-danger m-r-10"></i> Logga ut</a></li>
               </ul>
@@ -79,6 +76,18 @@
                 <li class="has-submenu">
                   <a href="<?php echo base_url('dashboard'); ?>"><i class="md md-dashboard"></i>Start</a>
                 </li>
+                <li class="has-submenu">
+                  <a href="<?php echo base_url('dashboard/store'); ?>"><i class="md md-local-grocery-store"></i>Butik</a>
+                </li>
+                <li class="has-submenu">
+                  <a href="<?php echo base_url('dashboard/subscriptions'); ?>"><i class="md md-wallet-membership"></i> Mina prenumerationer</a>
+                </li>
+                <li class="has-submenu">
+                  <a href="<?php echo base_url('dashboard/support'); ?>"><i class="md md-help"></i> Kundtjänst</a>
+                </li>
+                <li class="has-submenu">
+                  <a href="<?php echo base_url('dashboard/settings'); ?>"><i class="md md-settings"></i> Kontoinställningar</a>
+                </li>
               </ul>
               <!-- End navigation menu        -->
             </div>
@@ -86,7 +95,6 @@
         </div> <!-- end navbar-custom -->
       </header>
       <!-- End Navigation Bar-->
-
 
         <div class="wrapper">
             <div class="container">

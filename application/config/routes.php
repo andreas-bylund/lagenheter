@@ -26,8 +26,12 @@ $route['dashboard/sign_out'] = 'Member_controller/sign_out';
 $route['dashboard/settings'] = 'Member_controller/change_settings';
 $route['dashboard/settings/send'] = 'Member_controller/change_settings_send';
 
+$route['dashboard/store'] = 'Member_controller/store';
+$route['dashboard/support'] = 'Member_controller/zendesk_start';
+
 $route['dashboard/thankyou'] = 'Member_controller/thankyou';
 
+$route['dashboard/subscriptions'] = 'Member_controller/my_subscriptions';
 $route['dashboard/subscription/edit/(:any)'] = 'Member_controller/edit_subscription/$1';
 
 /**

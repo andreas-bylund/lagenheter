@@ -108,4 +108,21 @@
       </form>
     </div>
   </div>
+
+  <div class="col-md-6">
+    <div class="card-box">
+
+      <p>
+        <strong>Ditt namn:</strong> <br> Ditt för- och efternamn.
+      </p>
+
+      <p>
+        <strong>E-postadress:</strong> <br> Din e-postadress. Detta kommer även bli den e-postadress vi kommer skicka uppdateringar om nya lägenheter om ni har valt att få dem via e-postadress.
+      </p>
+
+      <p>
+        <strong>Mobilnummer:</strong> <br> Ditt mobilnummer. Detta kommer även bli det mobilnummer vi kommer skicka uppdateringar om nya lägenheter om ni har valt att få dem via sms. 
+      </p>
+    </div>
+  </div>
 </div>

@@ -19,15 +19,24 @@ class Member_controller extends CI_Controller {
    */
   public function index()
   {
-    //Hämta alla aktiva prenumerationer från Stripe API
-    $data['subscriptions'] = $this->list_subscriptions();
+    $this->template->load('templates\member', 'member/index');
+  }
 
-    if(!$data['subscriptions'])
-    {
-      $data['subscriptions'] = FALSE;
-    }
 
-    $this->template->load('templates\member', 'member/index', $data);
+  /**
+   * Butik - view
+   */
+  public function store()
+  {
+    $this->template->load('templates\member', 'member/store');
+  }
+
+  /**
+   * Kundtjänst - view
+   */
+  public function zendesk_start()
+  {
+    $this->template->load('templates\member', 'member/support');
   }
 
   /**
@@ -45,7 +54,7 @@ class Member_controller extends CI_Controller {
     $subscription->plan = $plan;
     $subscription->save();
 
-    redirect('dashboard');
+    redirect('dashboard/subscriptions');
   }
 
   /**
@@ -144,7 +153,7 @@ class Member_controller extends CI_Controller {
    * Listar alla prenumerationer - Stripe-API
    * Hämtar data från Stripe-API och returnar den
    */
-  public function list_subscriptions()
+  public function my_subscriptions()
   {
     $this->load->model('member_model');
 
@@ -170,7 +179,9 @@ class Member_controller extends CI_Controller {
         'status'  => 'active'
       ));
 
-      return $stripe_sub_response;
+      $data['subscriptions'] = $stripe_sub_response;
+
+      $this->template->load('templates\member', 'member/subscriptions', $data);
     }
   }
 
@@ -205,7 +216,7 @@ class Member_controller extends CI_Controller {
 
     $subscription->cancel(array('at_period_end' => true));
 
-    redirect('dashboard/cancel_confirmed');
+    redirect('dashboard/subscriptions');
   }
 
   /**
