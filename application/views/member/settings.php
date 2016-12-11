@@ -23,7 +23,7 @@
         passar era preferenser kommer vi kontakta er på det sätt ni har bestämt.
       </p>
 
-      <form class="" action="<?php echo base_url('dashboard/settings/send'); ?>" method="post">
+      <form action="<?php echo base_url('dashboard/settings/send'); ?>" method="post">
         <h4><b>Ditt namn</b></h4>
         <div class="row">
           <div class="col-md-6">
@@ -121,7 +121,7 @@
       </p>
 
       <p>
-        <strong>Mobilnummer:</strong> <br> Ditt mobilnummer. Detta kommer även bli det mobilnummer vi kommer skicka uppdateringar om nya lägenheter om ni har valt att få dem via sms. 
+        <strong>Mobilnummer:</strong> <br> Ditt mobilnummer. Detta kommer även bli det mobilnummer vi kommer skicka uppdateringar om nya lägenheter om ni har valt att få dem via sms.
       </p>
     </div>
   </div>

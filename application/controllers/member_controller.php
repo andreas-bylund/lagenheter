@@ -36,7 +36,50 @@ class Member_controller extends CI_Controller {
    */
   public function zendesk_start()
   {
+    $this->load->library('form_validation');
+
     $this->template->load('templates\member', 'member/support');
+  }
+
+  public function send_support_mail()
+  {
+    $this->load->library('email');
+    $this->load->library('form_validation');
+
+    //Formulär regel - Mobilnummer
+    $this->form_validation->set_rules('meddelande', 'meddelande',
+     'trim|required',
+       array(
+         'required' =>  'Du måste skriva ett %s.'
+       )
+     );
+
+    if($this->form_validation->run() == FALSE)
+    {
+      $this->template->load('templates\member', 'member/support');
+    }
+    else
+    {
+      $this->email->initialize(array(
+        'protocol' => 'smtp',
+        'smtp_host' => 'smtp.sendgrid.net',
+        'smtp_user' => $this->config->item('sendgrid_username'),
+        'smtp_pass' => $this->config->item('sendgrid_password'),
+        'smtp_port' => 587,
+        'crlf' => "\r\n",
+        'newline' => "\r\n"
+      ));
+
+      $this->email->from($this->session->userdata('mail'), $this->session->userdata('mail'));
+      $this->email->to('kundtjanst@lagenhetsbevakning.se');
+      $this->email->subject('Nytt supportärende');
+      $this->email->message($this->input->post('meddelande'));
+      $this->email->send();
+
+      $this->session->set_flashdata('success', 'Tack för ditt meddelande! Vi kommer svara så snabbt vi kan!');
+
+      redirect('dashboard/support');
+    }
   }
 
   /**

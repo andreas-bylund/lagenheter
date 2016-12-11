@@ -9,12 +9,28 @@
         <div class="col-md-12">
           <div class="row">
             <div class="col-md-6">
-              <form class="form" role="form">
+              <form action="<?php echo base_url('dashboard/support/send'); ?>" class="form" method="post"role="form">
+                <?php
+                  if(validation_errors())
+                  {
+                    echo '<div class="alert alert-danger">';
+                    echo validation_errors();
+                    echo '</div>';
+                  }
+
+                  if($this->session->flashdata('success'))
+                  {
+                    echo '<div class="alert alert-success">';
+                    echo $this->session->flashdata('success');
+                    echo '</div>';
+                  }
+
+                  ?>
                 <div class="form-group">
                   <label for="meddelande">Vad kan vi hjälpa dig med?</label>
-                  <textarea type="textarea" class="form-control" id="meddelande" placeholder="Ditt meddelande..."></textarea>
+                  <textarea type="textarea" class="form-control" name="meddelande" id="meddelande" placeholder="Ditt meddelande..."></textarea>
                 </div>
-                <button type="button" class="btn btn-default waves-effect waves-light">Skapa ärende</button>
+                <button type="submit" class="btn btn-default waves-effect waves-light">Skicka ärende</button>
               </form>
             </div>
           </div>
