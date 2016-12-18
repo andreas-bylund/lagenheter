@@ -35,6 +35,7 @@ $route['dashboard/thankyou'] = 'Member_controller/thankyou';
 
 $route['dashboard/subscriptions'] = 'Member_controller/my_subscriptions';
 $route['dashboard/subscription/edit/(:any)'] = 'Member_controller/edit_subscription/$1';
+$route['dashboard/subscription/edit_process'] = 'Member_controller/edit_subscription_process';
 
 
 

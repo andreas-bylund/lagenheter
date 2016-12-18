@@ -45,24 +45,14 @@
 <!-- Footer Section-->
 <section id="footer">
   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 footer">
-    <div class="footer-nav text-center">
-      <ul class="navi">
-        <li><a href="#home">Home</a></li>
-        <li><a href="#features">Features</a></li>
-        <li><a href="#pricing">Pricing</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
-    </div>
     <div class="social-icons text-center">
       <ul>
-        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-        <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-        <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
+        <li><a href="https://facebook.com/lagenhetsbevakning" target="_blank"><i class="fa fa-facebook"></i></a></li>
+        <li><a href="https://twitter.com/l_bevakning" target="_blank"><i class="fa fa-twitter"></i></a></li>
       </ul>
     </div>
 
-    <div class="copyright">Copyright © 2014 dotSquare. All rights reserved.</div>
+    <div class="copyright">© <?php echo date("Y") ?> Lägenhetsbevakning.se.</div>
   </div>
 </section>
 

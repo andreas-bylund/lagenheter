@@ -10,7 +10,7 @@
                 <h1>Förstahandskontrakt i Stockholm</h1>
                 <h2>Få ett sms/mail när en "först till kvarn" lägenhet blir tillgänglig</h2>
                 <div class="btn-orange">
-                  <a href="#">Kom igång på 3 minuter</a>
+                  <a href="<?php echo base_url('register'); ?>">Kom igång på 2 minuter</a>
                 </div>
               </div>
             </div>
@@ -25,7 +25,6 @@
 <section class="feature-styles" id="features">
   <div class="container feature-container">
     <div class="col-lg-push-6 col-md-6 col-sm-12 col-xs-12 text-center">
-
       <img src="images/settings.png" height="350px" alt="How it works?">
     </div>
 
@@ -37,43 +36,24 @@
 
   <div class="container feature-container">
     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center">
-      <div class="feature-icon blue hidden-xs">
-        <i class="fa fa-trello" ></i>
-      </div>
 
-      <div class="feature-icon orange hidden-xs">
-        <i class="fa fa-laptop" ></i>
-      </div>
-      <img src="images/body/devtime-img.png" alt="Reduce development time">
+      <img src="images/kotidsstatistik-2015.png" alt="Reduce development time">
     </div>
 
     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-      <h1>Varför finns denna tjänst?</h1>
-      <div class="txt">Enligt XXX så tar det ungefär X antal år för en bostadssökande att få en lägenhet med förstahandskontrakt. Med hjälp av Lägenhetsbevakning.se underlättar arbetet med att hitta en lägenhet i Stockholm. Då våra användare behöver inte manuellt kolla på alla olika hyresvärdar och deras hemsidor om det har kommit ut några nya lägenheter.</div>
-
-      <div class="getstarted">
-        <a href="#">Get Started Today! <i class="fa fa-long-arrow-right"></i></a>
-      </div>
+      <h1>Kötidsstatistik Stockholm</h1>
+      <div class="txt">För en som letar efter en hyreslägenhet i Stockholm kommer tyvärr få vänta ganska länge i bostadskön för att få en hyrelägenhet från t.ex. Bostadsförmedlingen i Stockholm. Som tur är så släpper många hyrevärdar så kallade "först till kvarn" lägenheter vilket innebär att vem som helst, oavsett kötid, kan få en hyreslägenhet i Stockholm.</div>
     </div>
   </div>
 
   <div class="container feature-container">
     <div class="col-lg-push-6 col-md-6 col-sm-12 col-xs-12 text-center">
-      <div class="feature-icon pgreen hidden-xs">
-        <i class="fa fa-trello" ></i>
-      </div>
-      <div class="feature-icon yellow hidden-xs">
-        <i class="fa fa-laptop" ></i>
-      </div>
-      <img src="images/body/alldevices-img.png" alt="Works on all devices">
+      <img src="<?php echo base_url('images/enbart_logga_250x250.jpg'); ?>" alt="Lägenhetsbevakning">
     </div>
 
     <div class="col-lg-pull-6 col-md-6 col-sm-12 col-xs-12">
-      <h1>Works on all devices</h1>
-      <div class="txt">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam suscipit aliquet felis, quis ultrices orci condiment. Suspendisse ut eleifend sem, nec iaculis nulla.</div>
-      <div class="getstarted">
-        <a href="#">Get Started Today! <i class="fa fa-long-arrow-right"></i></a>
-      </div>
+      <h1>Fungerar verkligen detta?</h1>
+      <div class="txt">Ja, denna tjänster fungerar verkligen! Vi utför mer än <strong>10,000,000 kontroller</strong> varje månad efter nya "först till kvarn" lägenheter i Stockholmsområdet. Med hjälp av denna tjänst slipper ni kontrollera alla hemsidor själva varje dag utan vi gör det för er och meddelar er så snabbt vi hittar en lägenhet som passar era kriterier.</div>
     </div>
   </div>
 </section>

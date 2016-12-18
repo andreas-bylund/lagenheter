@@ -46,7 +46,6 @@ class Member_controller extends CI_Controller {
     $this->load->library('email');
     $this->load->library('form_validation');
 
-    //Formulär regel - Mobilnummer
     $this->form_validation->set_rules('meddelande', 'meddelande',
      'trim|required',
        array(
@@ -242,7 +241,122 @@ class Member_controller extends CI_Controller {
       $this->session->userdata('stripe_user_id')
     );
 
+    $data['stripe_sub_id'] = $stripe_sub_id;
+
     $this->template->load('templates\member', 'member/edit_subscription', $data);
+  }
+
+  /**
+   * Ändra "Trigger-inställningarna" - Funktion
+   */
+  public function edit_subscription_process()
+  {
+    $stripe_sub_id = $this->input->post('stripe_sub_id');
+
+    //Hyra min
+    if($this->input->post('hyra_min') == NULL)
+    {
+      $hyra_min = 1000;
+    }
+    else
+    {
+      $hyra_min = $this->input->post('hyra_min');
+    }
+
+    //Hyra max
+    if($this->input->post('hyra_max') == NULL)
+    {
+      $hyra_max = 30000;
+    }
+    else
+    {
+      $hyra_max = $this->input->post('hyra_max');
+    }
+
+    //Rum min
+    if($this->input->post('rum_min') == NULL)
+    {
+      $rum_min = 1;
+    }
+    else
+    {
+      $rum_min = $this->input->post('rum_min');
+    }
+
+    //Rum max
+    if($this->input->post('rum_max') == NULL)
+    {
+      $rum_max = 10;
+    }
+    else
+    {
+      $rum_max = $this->input->post('rum_max');
+    }
+
+    //Kvm min
+    if($this->input->post('kvm_min') == NULL)
+    {
+      $kvm_min = 10;
+    }
+    else
+    {
+      $kvm_min = $this->input->post('kvm_min');
+    }
+
+    //Kvm max
+    if($this->input->post('kvm_max') == NULL)
+    {
+      $kvm_max = 250;
+    }
+    else
+    {
+      $kvm_max = $this->input->post('kvm_max');
+    }
+
+    //Kontrollera så att inte "min" värdet är större än "max" värdet
+    if($hyra_min > $hyra_max)
+    {
+      $this->session->set_flashdata('error', '"Minimum hyran" kan inte vara större än "Maximum hyran".');
+
+      redirect('dashboard/subscription/edit/'.$stripe_sub_id.'');
+    }
+
+    elseif($rum_min > $rum_max)
+    {
+      $this->session->set_flashdata('error', '"Minimum antal rum" kan inte vara större än "Maximum antal rum".');
+
+      redirect('dashboard/subscription/edit/'.$stripe_sub_id.'');
+    }
+
+    elseif($kvm_min > $kvm_max)
+    {
+      $this->session->set_flashdata('error', '"Minimum kvm" kan inte vara större än "Maximum kvm".');
+
+      redirect('dashboard/subscription/edit/'.$stripe_sub_id.'');
+    }
+    else
+    {
+      $data = array (
+        'min_hyra'  =>  $hyra_min,
+        'max_hyra'  =>  $hyra_max,
+        'min_rum'   =>  $rum_min,
+        'max_rum'   =>  $rum_max,
+        'min_kvm'   =>  $kvm_min,
+        'max_kvm'   =>  $kvm_max,
+        'stripe_sub_id' =>  $stripe_sub_id,
+        'stripe_user_id'  => $this->session->userdata('stripe_user_id')
+      );
+
+      //Uppdatera Trigger inställningarna för användaren
+      $this->load->model('member_model');
+
+      $this->member_model->update_trigger_settings($data);
+
+      $this->session->set_flashdata('success', 'Dina inställningar har blivit uppdaterad!');
+
+      redirect('dashboard/subscription/edit/'.$stripe_sub_id.'');
+    }
+
   }
 
   /**

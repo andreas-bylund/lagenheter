@@ -22,20 +22,9 @@
             </div>
           </div>
 
-          <div class="form-group ">
-            <div class="col-xs-12">
-              <div class="checkbox checkbox-primary">
-                <input id="checkbox-signup" type="checkbox">
-                <label for="checkbox-signup">
-                  Kom ihåg mig
-                </label>
-              </div>
-            </div>
-          </div>
-
           <div class="form-group text-center m-t-40">
             <div class="col-xs-12">
-              <button class="btn btn-pink btn-block text-uppercase waves-effect waves-light" type="submit">Logga in</button>
+              <button class="btn btn-danger btn-block text-uppercase waves-effect waves-light" type="submit">Logga in</button>
             </div>
           </div>
 

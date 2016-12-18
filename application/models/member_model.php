@@ -43,6 +43,14 @@ class Member_model extends CI_Model {
     }
   }
 
+  public function update_trigger_settings($settings)
+  {
+    $this->db->where('stripe_sub_id', $settings['stripe_sub_id']);
+    $this->db->where('stripe_user_id', $settings['stripe_user_id']);
+    
+    $this->db->update('user_triggers', $settings);
+  }
+
   public function set_stripe_user_id($string, $mail)
   {
     $this->db->set('stripe_user_id', $string);
