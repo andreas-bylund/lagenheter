@@ -16,23 +16,23 @@
           </div>
         </div>
 
-          <div class="form-group">
-            <div class="col-xs-12">
-              <input class="form-control" name="password" id="password" type="password" placeholder="Ditt lösenord">
-            </div>
+        <div class="form-group">
+          <div class="col-xs-12">
+            <input class="form-control" name="password" id="password" type="password" placeholder="Ditt lösenord">
           </div>
+        </div>
 
-          <div class="form-group text-center m-t-40">
-            <div class="col-xs-12">
-              <button class="btn btn-danger btn-block text-uppercase waves-effect waves-light" type="submit">Logga in</button>
-            </div>
+        <div class="form-group text-center m-t-40">
+          <div class="col-xs-12">
+            <button class="btn btn-danger btn-block text-uppercase waves-effect waves-light" type="submit">Logga in</button>
           </div>
+        </div>
 
-          <div class="form-group m-t-30 m-b-0">
-            <div class="col-sm-12">
-              <a href="<?php echo base_url('reset_password');?>" class="text-dark"><i class="fa fa-lock m-r-5"></i> Glömt ditt lösenord?</a>
-            </div>
+        <div class="form-group m-t-30 m-b-0">
+          <div class="col-sm-12">
+            <a href="<?php echo base_url('reset_password');?>" class="text-dark"><i class="fa fa-lock m-r-5"></i> Glömt ditt lösenord?</a>
           </div>
+        </div>
       </form>
     </div>
   </div>

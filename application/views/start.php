@@ -1,4 +1,3 @@
-
 <section class="banner">
   <div id="bannerSlider" class="carousel carousel-fade slide" data-ride="carousel">
     <div class="carousel-inner">
@@ -8,10 +7,12 @@
             <div class="col-md-12">
               <div class="content">
                 <h1>Förstahandskontrakt i Stockholm</h1>
-                <h2>Få ett sms/mail när en "först till kvarn" lägenhet blir tillgänglig</h2>
+                <p style="font-size: 30px; font-weight: 900; margin: 5px;">Få ett sms/mail när en "först till kvarn" lägenhet blir tillgänglig</p>
+                <p style="font-size: 25px; font-weight: 900; margin: 10px;">Endast 99kr/mån</p>
                 <div class="btn-orange">
                   <a href="<?php echo base_url('register'); ?>">Kom igång på 2 minuter</a>
                 </div>
+
               </div>
             </div>
           </div>
@@ -36,7 +37,6 @@
 
   <div class="container feature-container">
     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-center">
-
       <img src="images/kotidsstatistik-2015.png" alt="Reduce development time">
     </div>
 
@@ -56,4 +56,14 @@
       <div class="txt">Ja, denna tjänster fungerar verkligen! Vi utför mer än <strong>10,000,000 kontroller</strong> varje månad efter nya "först till kvarn" lägenheter i Stockholmsområdet. Med hjälp av denna tjänst slipper ni kontrollera alla hemsidor själva varje dag utan vi gör det för er och meddelar er så snabbt vi hittar en lägenhet som passar era kriterier.</div>
     </div>
   </div>
+  <div class="col-md-12">
+    <div class="row">
+      <div class="btn-orange text-center">
+        <a href="<?php echo base_url('register'); ?>">Kom igång på 2 minuter</a>
+      </div>
+    </div>
+    <br><br>
+  </div>
+
+
 </section>

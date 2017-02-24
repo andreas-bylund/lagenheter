@@ -9,6 +9,7 @@
       </div>
     </div>
 
+    <!--
     <div class="col-sm-6 col-lg-3 col-md-4 desktops">
       <div class="product-list-box thumb">
         <a href="javascript:void(0);" class="image-popup" title="Screenshot-1">
@@ -32,5 +33,6 @@
         </a>
       </div>
     </div>
+    -->
   </div>
 </div>
